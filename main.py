@@ -3,6 +3,7 @@ import cv2
 from ultralytics import YOLOv10 as YOLO
 import pandas as pd
 
+# Paths for models
 insect_detection_model_path = 'weights/insect.50.pt'
 weed_crop_model_path = 'weights/weedCrop.140.pt'
 crop_yield_model_path = 'weights/BRCropYield.pkl'
@@ -42,13 +43,13 @@ def predict_yield(country, item, year, average_rain_fall_mm_per_year, pesticides
 
 
 # Test on the images
-insect_image_path = 'images/colorado-beetle-eats-a-potato-leaves-young-pests-destroy-a-crop-in-the-field-parasites.jpg'
-weed_crop_image_path = 'images/weed-3.jpg'
-
-weed_crop_annotated_frame = detect_weed_crop(weed_crop_image_path)
+insect_image_path = ['images/colorado-beetle-eats-a-potato-leaves-young-pests-destroy-a-crop-in-the-field-parasites.jpg', 'images/1073dbb7e33a2bca70ce4286c2ac6c1d.jpg', 'images/insect.jpg',]
+weed_crop_image_path = ['images/weed-1.jpg','images/weed-2.jpg', 'images/weed-3.jpg']
+    
+weed_crop_annotated_frame = detect_weed_crop(weed_crop_image_path[0])
 cv2.imshow('Weed Crop Detection', weed_crop_annotated_frame)
 
-insect_annotated_frame = detect_insect(insect_image_path)
+insect_annotated_frame = detect_insect(insect_image_path[0])
 cv2.imshow('Insect Detection', insect_annotated_frame)
 
 cv2.waitKey(0)
