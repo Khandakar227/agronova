@@ -17,7 +17,7 @@ item_mapping = {'Cassava': 0, 'Maize': 1, 'Plantains and others': 2, 'Potatoes':
 insect_detection_model = YOLO(insect_detection_model_path)
 weed_crop_model = YOLO(weed_crop_model_path)
 crop_yield_model = pickle.load(open(crop_yield_model_path, 'rb'))
-crop_prediction_model = pickle.load(open(crop_prediction_model_path, 'rb'))
+crop_recommendation_model = pickle.load(open(crop_prediction_model_path, 'rb'))
 
 def detect_insect(image_path):
     results = insect_detection_model.predict(image_path)
@@ -33,7 +33,7 @@ def detect_weed_crop(image_path):
 
 def recommend_crop(N,P,K,temp, hum, ph, rainfall):
     x = pd.DataFrame([[N,P,K,temp, hum, ph, rainfall]], columns=['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall'])
-    prediction = crop_prediction_model.predict(x)
+    prediction = crop_recommendation_model.predict(x)
     return prediction
 
 def predict_yield(country, item, year, average_rain_fall_mm_per_year, pesticides_tonnes, avg_temp_celsius):
@@ -45,18 +45,18 @@ def predict_yield(country, item, year, average_rain_fall_mm_per_year, pesticides
 # Test on the images
 insect_image_path = ['images/colorado-beetle-eats-a-potato-leaves-young-pests-destroy-a-crop-in-the-field-parasites.jpg', 'images/1073dbb7e33a2bca70ce4286c2ac6c1d.jpg', 'images/insect.jpg',]
 weed_crop_image_path = ['images/weed-1.jpg','images/weed-2.jpg', 'images/weed-3.jpg']
-    
-weed_crop_annotated_frame = detect_weed_crop(weed_crop_image_path[0])
-cv2.imshow('Weed Crop Detection', weed_crop_annotated_frame)
 
-insect_annotated_frame = detect_insect(insect_image_path[0])
-cv2.imshow('Insect Detection', insect_annotated_frame)
+# insect_annotated_frame = detect_insect(insect_image_path[2])
+# cv2.imshow('Insect Detection', insect_annotated_frame)
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# weed_crop_annotated_frame = detect_weed_crop(weed_crop_image_path[2])
+# cv2.imshow('Weed Crop Detection', weed_crop_annotated_frame)
 
-recommended_crops = recommend_crop(N=50, P=50, K=30, temp=32, hum=80, ph=6.5, rainfall=100)
-print('\n\nRecommended Crops:', ", ".join(recommended_crops))
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
 
-predicted_yield = predict_yield('Bangladesh', 'Plantains and others', 2024, 1083.0, 75000.0, 32)
+# recommended_crops = recommend_crop(N=20, P=70, K=20, temp=32, hum=120, ph=4.5, rainfall=180)
+# print('\n\nRecommended Crops:', ", ".join(recommended_crops))
+
+predicted_yield = predict_yield('Armenia', 'Potatoes', 2025, 1003.0, 50000.0, 38)
 print('\nPredicted Yield:', ", ".join(map( "{:.2f}".format, predicted_yield)), 'Hectogram per hectare\n')
